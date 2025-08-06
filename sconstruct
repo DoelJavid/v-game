@@ -1,0 +1,49 @@
+
+PROJECT_NAME = "vgame"
+
+SRC_DIR = "./src"
+INCLUDE_DIR = "./include"
+LIB_DIR = "./lib"
+OBJ_DIR = "./obj"
+BIN_DIR = "./bin"
+GAMES_DIR = "./games"
+
+LIBS = [
+  "raylib"
+]
+
+DEBUG_FLAGS = "-Wall"
+RELEASE_FLAGS = "-Wall -O2"
+
+# To build in relase mode, specify the "--release" flag when calling scons.
+AddOption(
+  "--release",
+  action="store_true",
+  help="build in release mode",
+  default=False
+)
+
+env = Environment(CPPPATH = INCLUDE_DIR)
+
+if GetOption("release"):
+  env.Append(CCFLAGS = RELEASE_FLAGS)
+else:
+  env.Append(CCFLAGS = DEBUG_FLAGS)
+
+
+if env["PLATFORM"] == "win32":
+  # Add important libraries to compile successfully on windows.
+  LIBS += ["opengl32", "gdi32", "winmm", "msvcrt", "user32", "shell32"]
+else:
+  # Important libraries to work on Linux.
+  LIBS += ["GL", "m", "pthread", "dl", "rt", "X11"]
+
+env.VariantDir(OBJ_DIR, SRC_DIR, duplicate = False)
+env.Program(
+  BIN_DIR + "/" + PROJECT_NAME, Glob(OBJ_DIR + "/*.c"),
+  LIBS = LIBS,
+  LIBPATH = LIB_DIR
+)
+
+Command(BIN_DIR + GAMES_DIR[1:], GAMES_DIR, [Copy("$TARGET", "$SOURCE")])
+
