@@ -1,3 +1,5 @@
+import sys
+import subprocess
 
 PROJECT_NAME = "vgame"
 
@@ -9,11 +11,25 @@ BIN_DIR = "./bin"
 GAMES_DIR = "./games"
 
 LIBS = [
-  "raylib"
+  "raylib",
+  "luajit"
 ]
 
 DEBUG_FLAGS = "-Wall"
 RELEASE_FLAGS = "-Wall -O2"
+
+
+env = Environment(CPPPATH = INCLUDE_DIR)
+
+# To run the application, specify the "--run" flag when calling scons.
+AddOption(
+  "--run",
+  action="store_true",
+  help="start the application",
+  default=False
+)
+if GetOption("run"):
+  sys.exit(subprocess.call([BIN_DIR + "/" + PROJECT_NAME]))
 
 # To build in relase mode, specify the "--release" flag when calling scons.
 AddOption(
@@ -22,14 +38,10 @@ AddOption(
   help="build in release mode",
   default=False
 )
-
-env = Environment(CPPPATH = INCLUDE_DIR)
-
 if GetOption("release"):
   env.Append(CCFLAGS = RELEASE_FLAGS)
 else:
   env.Append(CCFLAGS = DEBUG_FLAGS)
-
 
 if env["PLATFORM"] == "win32":
   # Add important libraries to compile successfully on windows.
