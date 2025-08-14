@@ -1,5 +1,7 @@
+import os
 import sys
 import subprocess
+from pathlib import Path
 
 PROJECT_NAME = "vgame"
 
@@ -44,6 +46,8 @@ if GetOption("release"):
 else:
   env.Append(CCFLAGS = DEBUG_FLAGS)
 
+
+
 if env["PLATFORM"] == "win32":
   # Add important libraries to compile successfully on windows.
   LIBS += ["opengl32", "gdi32", "winmm", "msvcrt", "user32", "shell32"]
@@ -58,5 +62,12 @@ env.Program(
   LIBPATH = LIB_DIR
 )
 
-Command(BIN_DIR + GAMES_DIR[1:], GAMES_DIR, [Copy("$TARGET", "$SOURCE")])
+
+
+# Copy games from the "games" directory.
+BIN_GAMES_DIR = str(Path(BIN_DIR).joinpath(GAMES_DIR))
+
+env.Execute(Delete(BIN_GAMES_DIR))
+env.Execute(Copy(BIN_GAMES_DIR, GAMES_DIR))
+env.Clean(BIN_GAMES_DIR, BIN_GAMES_DIR)
 
