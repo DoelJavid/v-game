@@ -12,11 +12,12 @@ GAMES_DIR = "./games"
 
 LIBS = [
   "raylib",
-  "luajit"
+  "luajit",
+  "lua51"
 ]
 
-DEBUG_FLAGS = "-Wall"
-RELEASE_FLAGS = "-Wall -O2"
+DEBUG_FLAGS = ""
+RELEASE_FLAGS = "-O2"
 
 
 env = Environment(CPPPATH = INCLUDE_DIR)
@@ -52,7 +53,7 @@ else:
 
 env.VariantDir(OBJ_DIR, SRC_DIR, duplicate = False)
 env.Program(
-  BIN_DIR + "/" + PROJECT_NAME, Glob(OBJ_DIR + "/*.c"),
+  BIN_DIR + "/" + PROJECT_NAME, [Glob(OBJ_DIR + "/*.c"), Glob(OBJ_DIR + "/lualib/*.c")],
   LIBS = LIBS,
   LIBPATH = LIB_DIR
 )

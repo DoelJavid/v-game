@@ -1,22 +1,24 @@
 
-#include <raylib.h>
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "runtime.h"
 
 #ifdef _WIN32
-int WinMain(void) {
+// int WinMain(void) {
+int main(int argc, char** argv) {
 #else
-int main(void) {
+int main(int argc, char** argv) {
 #endif
-  InitWindow(800, 600, "V-Game");
-  SetTargetFPS(60);
-
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-    EndDrawing();
+  if (argc < 2) {
+    printf("Nothing to run!");
+    return -1;
   }
 
-  CloseWindow();
+  runtime_args_t runtime_args = {
+    .starting_game = argv[1]
+  };
 
-  return 0;
+  return runtime_init(runtime_args);
 }
 
