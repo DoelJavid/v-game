@@ -6,11 +6,11 @@ static draw_command_t graphics_commands[MAX_GRAPHICS_COMMANDS] = {0};
 
 // C API
 
-RenderTexture2D graphics_init() {
+RenderTexture2D* graphics_init() {
   graphics_framebuffer = LoadRenderTexture(
     GetScreenWidth(), GetScreenHeight()
   );
-  return graphics_framebuffer;
+  return &graphics_framebuffer;
 }
 
 void graphics_push_command(draw_command_t cmd) {
@@ -39,7 +39,15 @@ void graphics_draw() {
   static float turtle_x, turtle_y = 0.0f;
   static Color current_color;
 
-  runtime_check_close();
+  // Resize the framebuffer if needed.
+  if (IsWindowResized()) {
+    UnloadRenderTexture(graphics_framebuffer);
+    graphics_framebuffer = LoadRenderTexture(
+      GetScreenWidth(), GetScreenHeight()
+    );
+  }
+
+  // Begin drawing.
   BeginTextureMode(graphics_framebuffer);
 
   for (int i = 0; i < graphics_command_index; i++) {
@@ -104,8 +112,8 @@ void graphics_draw() {
 
   graphics_command_index = 0;
 
+  // End drawing and interrupt to draw framebuffer.
   EndTextureMode();
-
   runtime_interrupt();
 }
 

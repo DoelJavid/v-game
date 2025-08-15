@@ -16,7 +16,7 @@ typedef struct {
 /**
   Initializes the graphics library and returns a framebuffer.
 */
-RenderTexture2D graphics_init();
+RenderTexture2D* graphics_init();
 
 /**
   Pushes the given command to the draw commands if possible. If the total

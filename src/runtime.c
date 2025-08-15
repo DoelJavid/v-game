@@ -1,7 +1,7 @@
 #include "runtime.h"
 
 static lua_State* L;
-static RenderTexture runtime_framebuffer;
+static RenderTexture2D* runtime_framebuffer;
 
 int runtime_init(runtime_args_t args) {
 
@@ -9,6 +9,7 @@ int runtime_init(runtime_args_t args) {
   SetTraceLogLevel(LOG_NONE);
   InitWindow(800, 600, "V-Game");
   SetTargetFPS(60);
+  SetWindowState(FLAG_WINDOW_RESIZABLE);
 
   runtime_framebuffer = graphics_init();
 
@@ -58,7 +59,7 @@ void runtime_check_close() {
 void runtime_interrupt() {
   runtime_check_close();
   BeginDrawing();
-  DrawTexture(runtime_framebuffer.texture, 0, 0, WHITE);
+  DrawTexture(runtime_framebuffer->texture, 0, 0, WHITE);
   EndDrawing();
 }
 
