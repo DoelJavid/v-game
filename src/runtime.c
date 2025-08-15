@@ -20,6 +20,7 @@ int runtime_init(runtime_args_t args) {
 
   luaopen_vbase(L);
   luaopen_graphics(L);
+  luaopen_input(L);
   luaopen_math(L);
   luaopen_string(L);
 

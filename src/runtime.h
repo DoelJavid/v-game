@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "lualib/vbase.h"
 #include "lualib/graphics.h"
+#include "lualib/input.h"
 
 /**
   Payload used to initialize the runtime.

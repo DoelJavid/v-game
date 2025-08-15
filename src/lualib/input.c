@@ -1,0 +1,130 @@
+#include "input.h"
+
+static const int keyboard_input_map[] = {
+  KEY_ENTER,
+  KEY_SPACE,
+
+  KEY_UP,
+  KEY_RIGHT,
+  KEY_DOWN,
+  KEY_LEFT,
+
+  KEY_Z,
+  KEY_X,
+  KEY_C,
+  KEY_V,
+
+  KEY_A,
+  KEY_D
+};
+
+static const int gamepad_input_map[] = {
+  GAMEPAD_BUTTON_MIDDLE_RIGHT,
+  GAMEPAD_BUTTON_MIDDLE_LEFT,
+
+  GAMEPAD_BUTTON_LEFT_FACE_UP,
+  GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+  GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+  GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+
+  GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
+  GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,
+  GAMEPAD_BUTTON_RIGHT_FACE_UP,
+  GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+
+  GAMEPAD_BUTTON_LEFT_TRIGGER_1,
+  GAMEPAD_BUTTON_RIGHT_TRIGGER_1
+};
+
+static const char* const input_names[] = {
+  "Start",
+  "Select",
+
+  "Up",
+  "Right",
+  "Down",
+  "Left",
+
+  "A",
+  "B",
+  "C",
+  "D",
+
+  "L",
+  "R",
+  NULL
+};
+
+bool input_button(int button_id, int controller_id) {
+  if (button_id < 0 || button_id > 12)
+    return false;
+
+  return IsGamepadButtonDown(0, gamepad_input_map[button_id]) ||
+    IsKeyDown(keyboard_input_map[button_id]);
+}
+
+/**
+  Lua version of input_button.
+
+  This function can either take a number or an input name as an argument.
+*/
+static int luainput_button(lua_State* L) {
+  int button_id = 0;
+  if (lua_isnumber(L, 1)) {
+    button_id = luaL_checkint(L, 1) - 1;
+  } else {
+    button_id = luaL_checkoption(L, 1, NULL, input_names);
+  }
+
+  lua_pushboolean(L, input_button(button_id, luaL_optint(L, 2, 1)));
+  return 1;
+}
+
+/**
+  Grabs all the input from the controller and returns it as a table.
+
+  The returned table is formatted like so:
+  ```
+  {
+    Start: boolean,
+    Select: boolean,
+
+    Up: boolean,
+    Right: boolean,
+    Left: boolean,
+    Down: boolean,
+
+    A: boolean,
+    B: boolean,
+    C: boolean,
+    D: boolean,
+
+    L: boolean,
+    R: boolean
+  }
+  ```
+
+  By default this function will try to get input from controller one, but
+  optionally a controller index can be given to specify which controller to
+  read input from.
+*/
+static int luainput_grab(lua_State* L) {
+  const int controller_id = luaL_optint(L, 1, 1);
+
+  lua_createtable(L, 0, 12);
+  for (int i = 0; i < 12; i++) {
+    lua_pushboolean(L, input_button(i, controller_id));
+    lua_setfield(L, -2, input_names[i]);
+  }
+  return 1;
+}
+
+void luaopen_input(lua_State* L) {
+  static const luaL_Reg luainput_lib[] = {
+    {"button", luainput_button},
+    {"grab", luainput_grab},
+    {NULL, NULL}
+  };
+
+  luaL_register(L, "input", luainput_lib);
+}
