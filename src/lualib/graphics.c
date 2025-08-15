@@ -140,6 +140,30 @@ static int luagraphics_draw(lua_State* L) {
   return 0;
 }
 
+/**
+  Returns the result from `GetScreenWidth()`.
+*/
+static int luagraphics_width(lua_State* L) {
+  lua_pushinteger(L, GetScreenWidth());
+  return 1;
+}
+
+/**
+  Returns the result from `GetScreenHeight()`.
+*/
+static int luagraphics_height(lua_State* L) {
+  lua_pushinteger(L, GetScreenHeight());
+  return 1;
+}
+
+/**
+  Returns `GetScreenHeight() / GetScreenWidth()`.
+*/
+static int luagraphics_aspect(lua_State* L) {
+  lua_pushnumber(L, (float)GetScreenHeight() / (float)GetScreenWidth());
+  return 1;
+}
+
 void luaopen_graphics(lua_State* L) {
   static const luaL_Reg luagraphics_lib[] = {
     {"clear", luagraphics_clear},
@@ -147,6 +171,9 @@ void luaopen_graphics(lua_State* L) {
     {"plot", luagraphics_plot},
     {"move", luagraphics_move},
     {"draw", luagraphics_draw},
+    {"width", luagraphics_width},
+    {"height", luagraphics_height},
+    {"aspect", luagraphics_aspect},
     {NULL, NULL}
   };
 
