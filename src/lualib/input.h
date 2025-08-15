@@ -26,7 +26,20 @@
   11: L
   12: R
 */
-bool input_button(int button_id, int controller_id);
+bool input_pressed(int button_id, int controller_id);
+
+/**
+  Returns true if the button with the given ID has just been pressed and false
+  if otherwise. This method is different from `input_pressed`, which returns
+  if the butten is being held down.
+
+  By default this function will try to get input from controller one, but
+  optionally a controller index can be given to specify which controller to
+  read input from.
+
+  For input codes, see the declaration for `input_button()`
+*/
+bool input_tapped(int button_id, int controller_id);
 
 /**
   Activates the input library within the given lua state.
