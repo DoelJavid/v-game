@@ -1,11 +1,34 @@
 #include "vbase.h"
 
-// A good chunk of this is copied from `lbaselib.c` except for `lua_sleep`.
+/**
+  Returns the type of the given value in the form of a string. Unlike the
+  traditional `type()` function, this function supports a special case for
+  tables that have a `__type` field, where it will return `table.__type` if
+  it's a string.
+*/
+static int luavbase_type(lua_State* L) {
+  luaL_checkany(L, 1);
+
+  if (lua_type(L, 1) == LUA_TTABLE) {
+    lua_pushstring(L, "__type");
+    lua_rawget(L, 1);
+
+    int custom_table_type = lua_type(L, -1);
+    if (custom_table_type == LUA_TSTRING) {
+      return 1;
+    } else if (custom_table_type != LUA_TNIL) {
+      return luaL_error(L, "Invalid table type!");
+    }
+  }
+
+  lua_pushstring(L, luaL_typename(L, 1));
+  return 1;
+}
 
 /**
   Sleeps for the given amount of frames.
 */
-static int lua_sleep(lua_State* L) {
+static int luavbase_sleep(lua_State* L) {
   for (int frames = luaL_checkint(L, 1); frames > 0; frames--) {
     runtime_interrupt();
   }
@@ -13,8 +36,9 @@ static int lua_sleep(lua_State* L) {
 }
 
 void luaopen_vbase(lua_State* L) {
-  static const luaL_Reg lua_lib[] = {
-    {"sleep", lua_sleep},
+  static const luaL_Reg luavbase_lib[] = {
+    {"sleep", luavbase_sleep},
+    {"type", luavbase_type},
     {NULL, NULL}
   };
 
@@ -26,7 +50,10 @@ void luaopen_vbase(lua_State* L) {
     "loadstring",
     "module",
     "require",
-    "setfenv"
+    "setfenv",
+    "getmetatable",
+    "setmetatable",
+    "type"
   };
 
   // Load lua's base functions.
@@ -45,12 +72,11 @@ void luaopen_vbase(lua_State* L) {
   // Define V-GAME-specific base functions.
   // For compatibility with vanilla Lua 5.1.
   for (
-    luaL_Reg* reg = &lua_lib[0];
+    luaL_Reg* reg = &luavbase_lib[0];
     reg->name != NULL && reg->func != NULL;
     reg++
   ) {
     lua_register(L, reg->name, reg->func);
   }
-  luaL_register(L, NULL, lua_lib);
 }
 
