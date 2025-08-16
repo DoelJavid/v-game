@@ -31,7 +31,7 @@ static float step_oscillator(int type, float step) {
   https://github.com/mdcrtr/sound-generator/blob/main/src/sound_gen.c
 */
 static void
-generate_waveform(char* buffer, int samples, waveform_params_t params) {
+generate_waveform(short* buffer, int samples, waveform_params_t params) {
   float wave_step = ROOT_NOTE_FREQUENCY *
                     powf(2.0f, (float)params.semitone / 12.0f) / SAMPLE_RATE;
   float wave_index = 0.0f;
@@ -39,7 +39,7 @@ generate_waveform(char* buffer, int samples, waveform_params_t params) {
   for (int i = 0; i < samples; i++) {
     float sample = step_oscillator(params.type, wave_index);
     sample *= params.volume;
-    buffer[i] = (char)(sample * 32767.0f);
+    buffer[i] = (short)(sample * 32767.0f);
 
     wave_index += wave_step;
     if (wave_index > 1.0f)
@@ -55,14 +55,14 @@ generate_waveform(char* buffer, int samples, waveform_params_t params) {
 */
 static Sound generate_sound(waveform_params_t params) {
   int total_samples = params.duration * SAMPLE_RATE;
-  char buffer[total_samples];
+  short buffer[total_samples];
   generate_waveform(buffer, total_samples, params);
 
   // clang-format off
   Wave sound_wave = (Wave){
     .frameCount = total_samples,
     .sampleRate = SAMPLE_RATE,
-    .sampleSize = 8,
+    .sampleSize = 16,
     .channels = 1,
     .data = buffer
   };
