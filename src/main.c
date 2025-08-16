@@ -34,8 +34,21 @@ void display_help() {
   The main function of the applictation.
 */
 #ifdef _WIN32
-// int WinMain(void) {
+
+#ifdef BUILD_RELEASE
+int WinMain(void) {
+  // Redefine argc and argv to ensure backwards compatibility with traditional
+  // main.
+  int argc = __argc;
+  char** argv = __argv;
+
+#else
+
+// Use traditional main on windows for debug mode to display command-line.
 int main(int argc, char** argv) {
+
+#endif
+
 #else
 int main(int argc, char** argv) {
 #endif

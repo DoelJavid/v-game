@@ -18,8 +18,12 @@ LIBS = [
   "lua51"
 ]
 
-DEBUG_FLAGS = ""
-RELEASE_FLAGS = "-O2"
+LINUX_DEBUG_FLAGS = ""
+WINDOWS_DEBUG_FLAGS = ""
+
+LINUX_RELEASE_FLAGS = "-O2"
+WINDOWS_RELEASE_FLAGS = "/O2 /GA"
+
 
 
 env = Environment(CPPPATH = INCLUDE_DIR)
@@ -42,17 +46,34 @@ AddOption(
   default=False
 )
 if GetOption("release"):
-  env.Append(CCFLAGS = RELEASE_FLAGS)
+  if env["PLATFORM"] == "win32":
+    env.Append(
+      CCFLAGS = WINDOWS_RELEASE_FLAGS,
+      LINKFLAGS = "/NODEFAULTLIB:LIBCMT",
+      CPPDEFINES="BUILD_RELEASE"
+    )
+  else:
+    env.Append(CCFLAGS = LINUX_RELEASE_FLAGS, CPPDEFINES="BUILD_RELEASE")
+
+  print("Building for release...")
 else:
-  env.Append(CCFLAGS = DEBUG_FLAGS)
+  if env["PLATFORM"] == "win32":
+    env.Append(
+      CCFLAGS = WINDOWS_DEBUG_FLAGS,
+      LINKFLAGS = "/NODEFAULTLIB:LIBCMT",
+      CPPDEFINES="BUILD_DEBUG"
+    )
+  else:
+    env.Append(CCFLAGS = LINUX_DEBUG_FLAGS, CPPDEFINES="BUILD_DEBUG")
+
+  print("Building in debug mode...")
 
 
 
+# Add platform-specific libraries.
 if env["PLATFORM"] == "win32":
-  # Add important libraries to compile successfully on windows.
   LIBS += ["opengl32", "gdi32", "winmm", "msvcrt", "user32", "shell32"]
 else:
-  # Important libraries to work on Linux.
   LIBS += ["GL", "m", "pthread", "dl", "rt", "X11"]
 
 env.VariantDir(OBJ_DIR, SRC_DIR, duplicate = False)
