@@ -1,6 +1,17 @@
+--[[
+  logo.lua
 
-local color = 1
+  Made by DoelJavid for V-GAME.
 
+  https://github.com/DoelJavid/v-game
+]]
+
+-------------------------------------------------------------------------------
+
+--[[
+  Loops `x` between `m` and `n`. This function will throw an error if `m` is
+  less than `n`.
+]]
 function loopNumber(x, m, n)
   assert(m > n, "'m' should be greater than 'n'")
 
@@ -17,6 +28,10 @@ function loopNumber(x, m, n)
 
   return result
 end
+
+-------------------------------------------------------------------------------
+
+local color = 1
 
 graphics.clear()
 graphics.color(color)
@@ -84,4 +99,3 @@ while true do
   graphics.draw()
   sleep(4)
 end
-

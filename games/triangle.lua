@@ -89,4 +89,3 @@ while true do
 
   graphics.draw()
 end
-
