@@ -13,18 +13,18 @@
   read input from.
 
   Input Codes:
-  1: Start
-  2: Select
-  3: D-pad Up
-  4: D-pad Right
-  5: D-pad Down
-  6: D-pad Left
-  7: A
-  8: B
-  9: C
-  10: D
-  11: L
-  12: R
+  1. Start
+  2. Select
+  3. D-pad Up
+  4. D-pad Right
+  5. D-pad Down
+  6. D-pad Left
+  7. A
+  8. B
+  9. C
+  10. D
+  11. L
+  12. R
 */
 bool input_pressed(int button_id, int controller_id);
 

@@ -39,12 +39,11 @@ void graphics_clear(void);
   1. White
   2. Red
   3. Orange
-  3. Yellow
-  4. Green
-  5. Sky Blue
-  6. Blue
-  7. Pink
-  8. Grey
+  4. Yellow
+  5. Green
+  6. Light Blue
+  7. Blue
+  8. Pink
 
   If the given color index is not valid, then white will be chosen by default.
 */
