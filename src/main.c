@@ -1,13 +1,13 @@
 
+#include "runtime.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "runtime.h"
 
 /**
   Returns the number of '-' characters at the start of the string.
 */
-int get_slashes(const char* str) {
+int get_slashes(const char *str) {
   int result = 0;
   while (str[result] == '-')
     result++;
@@ -18,6 +18,7 @@ int get_slashes(const char* str) {
   Displays the help message and exits the application.
 */
 void display_help() {
+  // clang-format off
   printf(
 "V-GAME\n"
 "==============================================================================\n"
@@ -27,6 +28,8 @@ void display_help() {
 "-f, --fullscreen: Runs the runtime in fullscreen.\n"
 "-h, --help: Displays this message.\n"
   );
+  // clang-format on
+
   exit(0);
 }
 
@@ -40,17 +43,17 @@ int WinMain(void) {
   // Redefine argc and argv to ensure backwards compatibility with traditional
   // main.
   int argc = __argc;
-  char** argv = __argv;
+  char **argv = __argv;
 
 #else
 
 // Use traditional main on windows for debug mode to display command-line.
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
 #endif
 
 #else
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 #endif
 
   if (argc < 2) {
@@ -62,60 +65,57 @@ int main(int argc, char** argv) {
   char game_path[260] = "";
 
   for (int i = 1; i < argc; i++) {
-    const char* current_arg = argv[i];
+    const char *current_arg = argv[i];
     int slashes = get_slashes(current_arg);
 
     switch (slashes) {
-    case 1:
-      {
-        int arg_length = strlen(current_arg);
-        if (arg_length > 2) {
-          printf("Invalid flag \"%s\"!\n", current_arg);
-          return 1;
-        }
+    case 1: {
+      int arg_length = strlen(current_arg);
+      if (arg_length > 2) {
+        printf("Invalid flag \"%s\"!\n", current_arg);
+        return 1;
+      }
 
-        switch (current_arg[1]) {
-        case 'f':
-          runtime_args.fullscreen = true;
-          break;
+      switch (current_arg[1]) {
+      case 'f':
+        runtime_args.fullscreen = true;
+        break;
 
-        case 'h':
-          display_help();
+      case 'h':
+        display_help();
 
-        default:
-          printf("Invalid flag \"%s\"!\n", current_arg);
-          return 1;
-        }
-      } break;
+      default:
+        printf("Invalid flag \"%s\"!\n", current_arg);
+        return 1;
+      }
+    } break;
 
     case 2: // Parse long argument:
-      {
-        if (strcmp(current_arg, "--fullscreen") == 0) {
-          runtime_args.fullscreen = true;
-        } else if (strcmp(current_arg, "--help") == 0) {
-          display_help();
-        } else {
-          printf("Invalid flag \"%s\"!\n", current_arg);
-          return 1;
-        }
-      } break;
+    {
+      if (strcmp(current_arg, "--fullscreen") == 0) {
+        runtime_args.fullscreen = true;
+      } else if (strcmp(current_arg, "--help") == 0) {
+        display_help();
+      } else {
+        printf("Invalid flag \"%s\"!\n", current_arg);
+        return 1;
+      }
+    } break;
 
     default: // Attempt to parse the file path.
-      {
-        int path_length = strlen(current_arg);
-        strncpy(game_path, current_arg, path_length);
+    {
+      int path_length = strlen(current_arg);
+      strncpy(game_path, current_arg, path_length);
 
-        if (
-          current_arg[path_length - 1] == '\\' ||
-          current_arg[path_length - 1] == '/'
-        ) {
-          strcat(game_path, "init.lua");
-        } else if (strcmp(&current_arg[path_length - 4], ".lua") != 0) {
-          strcat(game_path, ".lua");
-        }
+      if (current_arg[path_length - 1] == '\\' ||
+          current_arg[path_length - 1] == '/') {
+        strcat(game_path, "init.lua");
+      } else if (strcmp(&current_arg[path_length - 4], ".lua") != 0) {
+        strcat(game_path, ".lua");
+      }
 
-        runtime_args.starting_game = game_path;
-      } break;
+      runtime_args.starting_game = game_path;
+    } break;
     }
   }
 
@@ -126,4 +126,3 @@ int main(int argc, char** argv) {
 
   return runtime_init(runtime_args);
 }
-

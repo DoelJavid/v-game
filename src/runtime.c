@@ -1,7 +1,7 @@
 #include "runtime.h"
 
-static lua_State* L;
-static RenderTexture2D* runtime_framebuffer;
+static lua_State *L;
+static RenderTexture2D *runtime_framebuffer;
 
 int runtime_init(runtime_args_t args) {
 
@@ -20,7 +20,7 @@ int runtime_init(runtime_args_t args) {
   runtime_framebuffer = graphics_init();
 
   // Initialize Lua runtime.
-  lua_State* L = luaL_newstate();
+  lua_State *L = luaL_newstate();
   if (!L) {
     return 99;
   }
@@ -39,7 +39,7 @@ int runtime_init(runtime_args_t args) {
 
   printf("Executing game at %s\n", args.starting_game);
   if (luaL_dofile(L, args.starting_game)) {
-    const char* error = lua_tostring(L, -1);
+    const char *error = lua_tostring(L, -1);
     char msg[512];
     strncpy(msg, error, 512);
     lua_close(L);
@@ -69,7 +69,7 @@ void runtime_interrupt() {
   EndDrawing();
 }
 
-void runtime_panic(const char* msg) {
+void runtime_panic(const char *msg) {
   printf("ERROR: %s\n", msg);
   if (GetWindowHandle())
     CloseWindow();
@@ -77,4 +77,3 @@ void runtime_panic(const char* msg) {
   graphics_free();
   exit(1);
 }
-

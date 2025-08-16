@@ -6,7 +6,7 @@
   tables that have a `__type` field, where it will return `table.__type` if
   it's a string.
 */
-static int luavbase_type(lua_State* L) {
+static int luavbase_type(lua_State *L) {
   luaL_checkany(L, 1);
 
   if (lua_type(L, 1) == LUA_TTABLE) {
@@ -28,55 +28,36 @@ static int luavbase_type(lua_State* L) {
 /**
   Sleeps for the given amount of frames.
 */
-static int luavbase_sleep(lua_State* L) {
+static int luavbase_sleep(lua_State *L) {
   for (int frames = luaL_checkint(L, 1); frames > 0; frames--) {
     runtime_interrupt();
   }
   return 0;
 }
 
-void luaopen_vbase(lua_State* L) {
+void luaopen_vbase(lua_State *L) {
   static const luaL_Reg luavbase_lib[] = {
-    {"sleep", luavbase_sleep},
-    {"type", luavbase_type},
-    {NULL, NULL}
-  };
+      {"sleep", luavbase_sleep}, {"type", luavbase_type}, {NULL, NULL}};
 
-  static const char* unsafe_base_globals[] = {
-    "dofile",
-    "getfenv",
-    "load",
-    "loadfile",
-    "loadstring",
-    "module",
-    "require",
-    "setfenv",
-    "getmetatable",
-    "setmetatable",
-    "type"
-  };
+  static const char *unsafe_base_globals[] = {
+      "dofile",       "getfenv",      "load",    "loadfile",
+      "loadstring",   "module",       "require", "setfenv",
+      "getmetatable", "setmetatable", "type"};
 
   // Load lua's base functions.
   luaopen_base(L);
 
   // Override unsafe Lua functions.
-  for (
-    int i = sizeof(unsafe_base_globals) / sizeof(const char*) - 1;
-    i >= 0;
-    i--
-  ) {
+  for (int i = sizeof(unsafe_base_globals) / sizeof(const char *) - 1; i >= 0;
+       i--) {
     lua_pushnil(L);
     lua_setglobal(L, unsafe_base_globals[i]);
   }
 
   // Define V-GAME-specific base functions.
   // For compatibility with vanilla Lua 5.1.
-  for (
-    luaL_Reg* reg = &luavbase_lib[0];
-    reg->name != NULL && reg->func != NULL;
-    reg++
-  ) {
+  for (const luaL_Reg *reg = &luavbase_lib[0];
+       reg->name != NULL && reg->func != NULL; reg++) {
     lua_register(L, reg->name, reg->func);
   }
 }
-

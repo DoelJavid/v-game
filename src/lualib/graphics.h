@@ -1,10 +1,10 @@
 #ifndef LUALIB_GRAPHICS_H
 #define LUALIB_GRAPHICS_H
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <raylib.h>
 #include "../runtime.h"
+#include <lauxlib.h>
+#include <lua.h>
+#include <raylib.h>
 
 #define MAX_GRAPHICS_COMMANDS 255
 
@@ -16,7 +16,7 @@ typedef struct {
 /**
   Initializes the graphics library and returns a framebuffer.
 */
-RenderTexture2D* graphics_init();
+RenderTexture2D *graphics_init();
 
 /**
   Pushes the given command to the draw commands if possible. If the total
@@ -77,7 +77,6 @@ void graphics_free();
 /**
   Opens the graphics library for the given lua state.
 */
-void luaopen_graphics(lua_State* L);
+void luaopen_graphics(lua_State *L);
 
 #endif
-

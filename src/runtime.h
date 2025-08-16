@@ -1,19 +1,21 @@
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <raylib.h>
-#include <stdio.h>
-#include "lualib/vbase.h"
 #include "lualib/graphics.h"
 #include "lualib/input.h"
+#include "lualib/vbase.h"
+#include <lauxlib.h>
+#include <lua.h>
+#include <raylib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
   Payload used to initialize the runtime.
 */
 typedef struct {
-  const char* starting_game;
+  const char *starting_game;
   bool fullscreen;
 } runtime_args_t;
 
@@ -43,9 +45,6 @@ void runtime_sleep(int frames);
   Causes the program to panic, printing the given message to the console and
   freeing any resources related to the runtime.
 */
-void runtime_panic(const char* msg);
-
-
+void runtime_panic(const char *msg);
 
 #endif
-
