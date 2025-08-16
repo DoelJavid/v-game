@@ -14,7 +14,7 @@ int runtime_init(runtime_args_t args) {
     int monitor = GetCurrentMonitor();
     SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
     SetWindowState(
-      FLAG_WINDOW_RESIZABLE | FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT
+      FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT
     );
   } else {
     SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);

@@ -8,7 +8,7 @@ static draw_command_t graphics_commands[MAX_GRAPHICS_COMMANDS] = {0};
 
 RenderTexture2D* graphics_init() {
   graphics_framebuffer = LoadRenderTexture(
-    GetScreenWidth(), GetScreenHeight()
+    GetRenderWidth(), GetRenderHeight()
   );
   return &graphics_framebuffer;
 }
@@ -43,7 +43,7 @@ void graphics_draw() {
   if (IsWindowResized()) {
     UnloadRenderTexture(graphics_framebuffer);
     graphics_framebuffer = LoadRenderTexture(
-      GetScreenWidth(), GetScreenHeight()
+      GetRenderWidth(), GetRenderHeight()
     );
   }
 
@@ -90,12 +90,12 @@ void graphics_draw() {
     case 2: // Draw To Point (graphics.plot())
       DrawLineEx(
         (Vector2){
-          turtle_x * GetScreenWidth(),
-          turtle_y * GetScreenHeight()
+          turtle_x * GetRenderWidth(),
+          turtle_y * GetRenderHeight()
         },
         (Vector2){
-          current_command.x * GetScreenWidth(),
-          current_command.y * GetScreenHeight()
+          current_command.x * GetRenderWidth(),
+          current_command.y * GetRenderHeight()
         },
         3.0f, current_color
       );
@@ -149,26 +149,26 @@ static int luagraphics_draw(lua_State* L) {
 }
 
 /**
-  Returns the result from `GetScreenWidth()`.
+  Returns the result from `GetRenderWidth()`.
 */
 static int luagraphics_width(lua_State* L) {
-  lua_pushinteger(L, GetScreenWidth());
+  lua_pushinteger(L, GetRenderWidth());
   return 1;
 }
 
 /**
-  Returns the result from `GetScreenHeight()`.
+  Returns the result from `GetRenderHeight()`.
 */
 static int luagraphics_height(lua_State* L) {
-  lua_pushinteger(L, GetScreenHeight());
+  lua_pushinteger(L, GetRenderHeight());
   return 1;
 }
 
 /**
-  Returns `GetScreenHeight() / GetScreenWidth()`.
+  Returns `GetRenderHeight() / GetRenderWidth()`.
 */
 static int luagraphics_aspect(lua_State* L) {
-  lua_pushnumber(L, (float)GetScreenHeight() / (float)GetScreenWidth());
+  lua_pushnumber(L, (float)GetRenderHeight() / (float)GetRenderWidth());
   return 1;
 }
 
