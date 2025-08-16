@@ -9,7 +9,14 @@ int runtime_init(runtime_args_t args) {
   SetTraceLogLevel(LOG_NONE);
   InitWindow(800, 600, "V-Game");
   SetTargetFPS(60);
-  SetWindowState(FLAG_WINDOW_RESIZABLE);
+
+  if (args.fullscreen) {
+    int monitor = GetCurrentMonitor();
+    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_FULLSCREEN_MODE);
+    SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+  } else {
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
+  }
 
   runtime_framebuffer = graphics_init();
 
@@ -47,7 +54,7 @@ int runtime_init(runtime_args_t args) {
 }
 
 void runtime_check_close() {
-  if (WindowShouldClose()) {
+  if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE)) {
     if (L)
       lua_close(L);
 
