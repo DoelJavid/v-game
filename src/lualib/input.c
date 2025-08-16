@@ -79,7 +79,7 @@ bool input_tapped(int button_id, int controller_id) {
 
   This function can either take a number or an input name as an argument.
 */
-static int luainput_pressed(lua_State *L) {
+static int luainput_pressed(lua_State* L) {
   int button_id = 0;
   if (lua_isnumber(L, 1)) {
     button_id = luaL_checkint(L, 1) - 1;
@@ -96,7 +96,7 @@ static int luainput_pressed(lua_State *L) {
 
   This function can either take a number or an input name as an argument.
 */
-static int luainput_tapped(lua_State *L) {
+static int luainput_tapped(lua_State* L) {
   int button_id = 0;
   if (lua_isnumber(L, 1)) {
     button_id = luaL_checkint(L, 1) - 1;
@@ -136,7 +136,7 @@ static int luainput_tapped(lua_State *L) {
   optionally a controller index can be given to specify which controller to
   read input from.
 */
-static int luainput_grab(lua_State *L) {
+static int luainput_grab(lua_State* L) {
   const int controller_id = luaL_optint(L, 1, 1);
 
   lua_createtable(L, 0, 12);
@@ -147,7 +147,7 @@ static int luainput_grab(lua_State *L) {
   return 1;
 }
 
-void luaopen_input(lua_State *L) {
+void luaopen_input(lua_State* L) {
   // clang-format off
   static const luaL_Reg luainput_lib[] = {
     {"pressed", luainput_pressed},

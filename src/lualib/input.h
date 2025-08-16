@@ -44,6 +44,6 @@ bool input_tapped(int button_id, int controller_id);
 /**
   Activates the input library within the given lua state.
 */
-void luaopen_input(lua_State *L);
+void luaopen_input(lua_State* L);
 
 #endif

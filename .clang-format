@@ -1,0 +1,13 @@
+BasedOnStyle: LLVM
+
+IndentWidth: 2
+ContinuationIndentWidth: 2
+ColumnLimit: 80
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: None
+
+

@@ -15,7 +15,7 @@
   Payload used to initialize the runtime.
 */
 typedef struct {
-  const char *starting_game;
+  const char* starting_game;
   bool fullscreen;
 } runtime_args_t;
 
@@ -45,6 +45,6 @@ void runtime_sleep(int frames);
   Causes the program to panic, printing the given message to the console and
   freeing any resources related to the runtime.
 */
-void runtime_panic(const char *msg);
+void runtime_panic(const char* msg);
 
 #endif

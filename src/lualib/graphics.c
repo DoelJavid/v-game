@@ -6,7 +6,7 @@ static draw_command_t graphics_commands[MAX_GRAPHICS_COMMANDS] = {0};
 
 // C API
 
-RenderTexture2D *graphics_init() {
+RenderTexture2D* graphics_init() {
   graphics_framebuffer = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
   return &graphics_framebuffer;
 }
@@ -39,7 +39,7 @@ void graphics_draw() {
   if (IsWindowResized()) {
     UnloadRenderTexture(graphics_framebuffer);
     graphics_framebuffer =
-        LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
+      LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
   }
 
   // Begin drawing.
@@ -84,10 +84,11 @@ void graphics_draw() {
 
     case 2: // Draw To Point (graphics.plot())
       DrawLineEx(
-          (Vector2){turtle_x * GetRenderWidth(), turtle_y * GetRenderHeight()},
-          (Vector2){current_command.x * GetRenderWidth(),
-                    current_command.y * GetRenderHeight()},
-          3.0f, current_color);
+        (Vector2){turtle_x * GetRenderWidth(), turtle_y * GetRenderHeight()},
+        (Vector2){current_command.x * GetRenderWidth(),
+                  current_command.y * GetRenderHeight()},
+        3.0f, current_color
+      );
 
     case 3: // Move To Point (graphics.move())
       turtle_x = current_command.x;
@@ -110,27 +111,27 @@ void graphics_free() { UnloadRenderTexture(graphics_framebuffer); }
 
 // Lua API
 
-static int luagraphics_clear(lua_State *L) {
+static int luagraphics_clear(lua_State* L) {
   graphics_clear();
   return 0;
 }
 
-static int luagraphics_color(lua_State *L) {
+static int luagraphics_color(lua_State* L) {
   graphics_color(luaL_checkint(L, 1));
   return 0;
 }
 
-static int luagraphics_plot(lua_State *L) {
+static int luagraphics_plot(lua_State* L) {
   graphics_plot((float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2));
   return 0;
 }
 
-static int luagraphics_move(lua_State *L) {
+static int luagraphics_move(lua_State* L) {
   graphics_move((float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2));
   return 0;
 }
 
-static int luagraphics_draw(lua_State *L) {
+static int luagraphics_draw(lua_State* L) {
   graphics_draw();
   return 0;
 }
@@ -138,7 +139,7 @@ static int luagraphics_draw(lua_State *L) {
 /**
   Returns the result from `GetRenderWidth()`.
 */
-static int luagraphics_width(lua_State *L) {
+static int luagraphics_width(lua_State* L) {
   lua_pushinteger(L, GetRenderWidth());
   return 1;
 }
@@ -146,7 +147,7 @@ static int luagraphics_width(lua_State *L) {
 /**
   Returns the result from `GetRenderHeight()`.
 */
-static int luagraphics_height(lua_State *L) {
+static int luagraphics_height(lua_State* L) {
   lua_pushinteger(L, GetRenderHeight());
   return 1;
 }
@@ -154,12 +155,12 @@ static int luagraphics_height(lua_State *L) {
 /**
   Returns `GetRenderHeight() / GetRenderWidth()`.
 */
-static int luagraphics_aspect(lua_State *L) {
+static int luagraphics_aspect(lua_State* L) {
   lua_pushnumber(L, (float)GetRenderHeight() / (float)GetRenderWidth());
   return 1;
 }
 
-void luaopen_graphics(lua_State *L) {
+void luaopen_graphics(lua_State* L) {
   // clang-format off
   static const luaL_Reg luagraphics_lib[] = {
     {"clear", luagraphics_clear},

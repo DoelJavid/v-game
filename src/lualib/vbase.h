@@ -10,6 +10,6 @@
 /**
   Opens the base library for V-GAME.
 */
-void luaopen_vbase(lua_State *L);
+void luaopen_vbase(lua_State* L);
 
 #endif

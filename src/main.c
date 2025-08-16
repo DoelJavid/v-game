@@ -7,7 +7,7 @@
 /**
   Returns the number of '-' characters at the start of the string.
 */
-int get_slashes(const char *str) {
+int get_slashes(const char* str) {
   int result = 0;
   while (str[result] == '-')
     result++;
@@ -43,17 +43,17 @@ int WinMain(void) {
   // Redefine argc and argv to ensure backwards compatibility with traditional
   // main.
   int argc = __argc;
-  char **argv = __argv;
+  char** argv = __argv;
 
 #else
 
 // Use traditional main on windows for debug mode to display command-line.
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 #endif
 
 #else
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 #endif
 
   if (argc < 2) {
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
   char game_path[260] = "";
 
   for (int i = 1; i < argc; i++) {
-    const char *current_arg = argv[i];
+    const char* current_arg = argv[i];
     int slashes = get_slashes(current_arg);
 
     switch (slashes) {
