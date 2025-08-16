@@ -18,6 +18,8 @@ int runtime_init(runtime_args_t args) {
   }
 
   runtime_framebuffer = graphics_init();
+  audio_init();
+  audio_blip(3, 24, 0.5, 0.1f); // Test to see if everything is working.
 
   // Initialize Lua runtime.
   lua_State* L = luaL_newstate();
@@ -27,6 +29,7 @@ int runtime_init(runtime_args_t args) {
 
   luaopen_vbase(L);
   luaopen_graphics(L);
+  luaopen_audio(L);
   luaopen_input(L);
   luaopen_math(L);
   luaopen_string(L);
@@ -57,6 +60,8 @@ void runtime_check_close() {
     if (L)
       lua_close(L);
 
+    graphics_free();
+    audio_free();
     CloseWindow();
     exit(0);
   }
@@ -75,5 +80,6 @@ void runtime_panic(const char* msg) {
     CloseWindow();
 
   graphics_free();
+  audio_free();
   exit(1);
 }

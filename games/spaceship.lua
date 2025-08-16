@@ -283,12 +283,14 @@ function Ship()
     if input.pressed("Up") then
       local targetVelocity = Point(0, self.Speed):Rotate(self.Rotation)
       self.Velocity = self.Velocity:Lerp(targetVelocity, 0.005)
+      audio.blip(4, {Semitone = -250, Duration = 0.05})
     else
       self.Velocity = self.Velocity:Lerp(Point(), 0.02)
     end
 
     if input.tapped("A") then
       fireBullet(self.Position, pointFromRotation(self.Rotation + math.pi / 2):Scale(0.02))
+      audio.blip(1, {Semitone = 23, Duration = 0.05})
     end
 
     self.Position.X =

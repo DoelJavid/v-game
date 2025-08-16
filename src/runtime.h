@@ -1,6 +1,7 @@
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
+#include "lualib/audio.h"
 #include "lualib/graphics.h"
 #include "lualib/input.h"
 #include "lualib/vbase.h"
