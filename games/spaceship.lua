@@ -3,7 +3,7 @@
 
   Made by DoelJavid for V-GAME.
 
-  https://github.com/DoelJavid/vgame
+  https://github.com/DoelJavid/v-game
 ]]
 
 -------------------------------------------------------------------------------
