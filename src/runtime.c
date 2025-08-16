@@ -9,15 +9,12 @@ int runtime_init(runtime_args_t args) {
   SetTraceLogLevel(LOG_NONE);
   InitWindow(800, 600, "V-Game");
   SetTargetFPS(60);
+  SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
 
   if (args.fullscreen) {
     int monitor = GetCurrentMonitor();
     SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
-    SetWindowState(
-      FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT
-    );
-  } else {
-    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    ToggleFullscreen();
   }
 
   runtime_framebuffer = graphics_init();
