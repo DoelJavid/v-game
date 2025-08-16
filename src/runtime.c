@@ -12,10 +12,12 @@ int runtime_init(runtime_args_t args) {
 
   if (args.fullscreen) {
     int monitor = GetCurrentMonitor();
-    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_FULLSCREEN_MODE);
     SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+    SetWindowState(
+      FLAG_WINDOW_RESIZABLE | FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT
+    );
   } else {
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   }
 
   runtime_framebuffer = graphics_init();
