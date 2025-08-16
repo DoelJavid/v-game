@@ -14,8 +14,7 @@ GAMES_DIR = "./games"
 
 LIBS = [
   "raylib",
-  "luajit",
-  "lua51"
+  "luajit"
 ]
 
 LINUX_DEBUG_FLAGS = ""
@@ -32,7 +31,7 @@ env = Environment(CPPPATH = INCLUDE_DIR)
 AddOption(
   "--run",
   action="store_true",
-  help="start the application",
+  help="Start the application",
   default=False
 )
 if GetOption("run"):
@@ -42,7 +41,7 @@ if GetOption("run"):
 AddOption(
   "--release",
   action="store_true",
-  help="build in release mode",
+  help="Build in release mode",
   default=False
 )
 if GetOption("release"):
@@ -72,9 +71,24 @@ else:
 
 # Add platform-specific libraries.
 if env["PLATFORM"] == "win32":
-  LIBS += ["opengl32", "gdi32", "winmm", "msvcrt", "user32", "shell32"]
+  LIBS += [
+    "lua51", # Apparently windows also needs this library for luajit to work.
+    "opengl32",
+    "gdi32",
+    "winmm",
+    "msvcrt",
+    "user32",
+    "shell32"
+  ]
 else:
-  LIBS += ["GL", "m", "pthread", "dl", "rt", "X11"]
+  LIBS += [
+    "GL",
+    "m",
+    "pthread",
+    "dl",
+    "rt",
+    "X11"
+  ]
 
 env.VariantDir(OBJ_DIR, SRC_DIR, duplicate = False)
 env.Program(
