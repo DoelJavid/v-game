@@ -18,6 +18,7 @@
 typedef struct {
   const char* starting_game;
   bool fullscreen;
+  bool cut_intro;
 } runtime_args_t;
 
 /**

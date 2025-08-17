@@ -120,10 +120,12 @@ int runtime_init(runtime_args_t args) {
   lua_setfield(L, -2, "dump");
   lua_pop(L, 1);
 
-  // Play the intro.
-  audio_blip(2, 15, 0.5, 0.1f); // Test to see if everything is working.
-  for (int frame = 0; frame < 180; frame++)
-    runtime_draw_intro(frame);
+  if (!args.cut_intro) {
+    // Play the intro.
+    audio_blip(2, 15, 0.5, 0.1f); // Test to see if everything is working.
+    for (int frame = 0; frame < 180; frame++)
+      runtime_draw_intro(frame);
+  }
 
   printf("Executing game at %s\n", args.starting_game);
   if (luaL_dofile(L, args.starting_game)) {

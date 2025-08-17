@@ -26,6 +26,7 @@ void display_help() {
 "\n"
 "## FLAGS:\n"
 "-f, --fullscreen: Runs the runtime in fullscreen.\n"
+"-c, --cut-intro: Skips the intro screen.\n"
 "-h, --help: Displays this message.\n"
   );
   // clang-format on
@@ -81,6 +82,10 @@ int main(int argc, char** argv) {
         runtime_args.fullscreen = true;
         break;
 
+      case 'c':
+        runtime_args.cut_intro = true;
+        break;
+
       case 'h':
         display_help();
 
@@ -94,6 +99,8 @@ int main(int argc, char** argv) {
     {
       if (strcmp(current_arg, "--fullscreen") == 0) {
         runtime_args.fullscreen = true;
+      } else if (strcmp(current_arg, "--cut-intro") == 0) {
+        runtime_args.cut_intro = true;
       } else if (strcmp(current_arg, "--help") == 0) {
         display_help();
       } else {
