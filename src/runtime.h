@@ -31,12 +31,12 @@ int runtime_init(runtime_args_t args);
   application if necessary. This function runs automatically during an
   interrupt.
 */
-void runtime_check_close();
+void runtime_check_close(void);
 
 /**
   Interrupts the execution of the current program and causes a frame to skip.
 */
-void runtime_interrupt();
+void runtime_interrupt(void);
 
 /**
   Skips the given amount of frames.

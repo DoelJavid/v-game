@@ -16,7 +16,7 @@ typedef struct {
 /**
   Initializes the graphics library and returns a framebuffer.
 */
-RenderTexture2D* graphics_init();
+RenderTexture2D* graphics_init(void);
 
 /**
   Pushes the given command to the draw commands if possible. If the total
@@ -66,12 +66,17 @@ void graphics_move(float x, float y);
 /**
   Draws all the currently used commands.
 */
-void graphics_draw();
+void graphics_draw(void);
+
+/**
+  Gets the total amount of commands stored within graphics memory.
+*/
+const size_t graphics_count(void);
 
 /**
   Frees the current framebuffer.
 */
-void graphics_free();
+void graphics_free(void);
 
 /**
   Opens the graphics library for the given lua state.

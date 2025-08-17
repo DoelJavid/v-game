@@ -17,7 +17,7 @@ int get_slashes(const char* str) {
 /**
   Displays the help message and exits the application.
 */
-void display_help() {
+void display_help(void) {
   // clang-format off
   printf(
 "V-GAME\n"

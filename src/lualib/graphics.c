@@ -6,7 +6,7 @@ static draw_command_t graphics_commands[MAX_GRAPHICS_COMMANDS] = {0};
 
 // C API
 
-RenderTexture2D* graphics_init() {
+RenderTexture2D* graphics_init(void) {
   graphics_framebuffer = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
   return &graphics_framebuffer;
 }
@@ -31,7 +31,7 @@ void graphics_move(float x, float y) {
   graphics_push_command((draw_command_t){3, x, y});
 }
 
-void graphics_draw() {
+void graphics_draw(void) {
   static float turtle_x, turtle_y = 0.0f;
   static Color current_color;
 
@@ -83,12 +83,20 @@ void graphics_draw() {
       break;
 
     case 2: // Draw To Point (graphics.plot())
+      // clang-format off
       DrawLineEx(
-        (Vector2){turtle_x * GetRenderWidth(), turtle_y * GetRenderHeight()},
-        (Vector2){current_command.x * GetRenderWidth(),
-                  current_command.y * GetRenderHeight()},
-        3.0f, current_color
+        (Vector2){
+          turtle_x * GetRenderWidth(),
+          turtle_y * GetRenderHeight()
+        },
+        (Vector2){
+          current_command.x * GetRenderWidth(),
+          current_command.y * GetRenderHeight()
+        },
+        3.0f,
+        current_color
       );
+      // clang-format on
 
     case 3: // Move To Point (graphics.move())
       turtle_x = current_command.x;
@@ -107,7 +115,9 @@ void graphics_draw() {
   runtime_interrupt();
 }
 
-void graphics_free() { UnloadRenderTexture(graphics_framebuffer); }
+size_t graphics_count(void) { return graphics_command_index; }
+
+void graphics_free(void) { UnloadRenderTexture(graphics_framebuffer); }
 
 // Lua API
 
@@ -160,6 +170,14 @@ static int luagraphics_aspect(lua_State* L) {
   return 1;
 }
 
+/**
+  Lua wrapper for `graphics_count()`.
+*/
+static int luagraphics_count(lua_State* L) {
+  lua_pushinteger(L, graphics_count());
+  return 1;
+}
+
 void luaopen_graphics(lua_State* L) {
   // clang-format off
   static const luaL_Reg luagraphics_lib[] = {
@@ -171,6 +189,7 @@ void luaopen_graphics(lua_State* L) {
     {"width", luagraphics_width},
     {"height", luagraphics_height},
     {"aspect", luagraphics_aspect},
+    {"count", luagraphics_count},
     {NULL, NULL}
   };
   // clang-format on
