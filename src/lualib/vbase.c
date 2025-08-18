@@ -1,3 +1,11 @@
+/**
+  src/lualib/vbase.h
+
+  Written by DoelJavid for V-GAME.
+
+  https://github.com/DoelJavid/v-game
+*/
+
 #include "vbase.h"
 
 /**

@@ -1,3 +1,9 @@
+#
+# Written by DoelJavid for V-GAME
+#
+# https://github.com/DoelJavid/v-game
+#
+
 import os
 import sys
 import subprocess
@@ -92,7 +98,13 @@ else:
 
 env.VariantDir(OBJ_DIR, SRC_DIR, duplicate = False)
 env.Program(
-  BIN_DIR + "/" + PROJECT_NAME, [Glob(OBJ_DIR + "/*.c"), Glob(OBJ_DIR + "/lualib/*.c")],
+  BIN_DIR + "/" + PROJECT_NAME,
+  [
+    Glob(OBJ_DIR + "/*.c"),
+    Glob(OBJ_DIR + "/lualib/*.c"),
+    Glob(OBJ_DIR + "/api/*.c")
+  ],
+
   LIBS = LIBS,
   LIBPATH = LIB_DIR
 )

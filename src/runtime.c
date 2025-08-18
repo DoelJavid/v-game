@@ -1,3 +1,11 @@
+/**
+  src/runtime.c
+
+  Written by DoelJavid for V-GAME.
+
+  https://github.com/DoelJavid/v-game
+*/
+
 #include "runtime.h"
 
 static lua_State* L;

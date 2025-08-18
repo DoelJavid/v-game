@@ -1,3 +1,11 @@
+/**
+  src/runtime.h
+
+  Written by DoelJavid for V-GAME.
+
+  https://github.com/DoelJavid/v-game
+*/
+
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
