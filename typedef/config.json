@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/LLS-Addons/main/schemas/addon_config.schema.json",
+  "name": "V-GAME",
+  "description": "Type annotations for V-GAME.",
+  "settings": {
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.runtime.builtin": {
+      "basic": "disable",
+      "bit": "disable",
+      "bit32": "disable",
+      "coroutine": "disable",
+      "debug": "disable",
+      "ffi": "disable",
+      "io": "disable",
+      "jit": "disable",
+      "os": "disable",
+      "package": "disable",
+      "string": "disable",
+      "table": "disable",
+      "table.clear": "disable",
+      "table.new": "disable",
+      "utf8": "disable"
+    },
+    "Lua.diagnostics.disable": [
+      "duplicate-index",
+      "lowercase-global"
+    ],
+    "Lua.completion.autoRequire": false,
+    "Lua.completion.workspaceWord": false
+  }
+}
