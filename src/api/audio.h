@@ -9,6 +9,7 @@
 #ifndef API_AUDIO_H
 #define API_AUDIO_H
 
+#include "system.h"
 #include <math.h>
 #include <raylib.h>
 #include <stdio.h>

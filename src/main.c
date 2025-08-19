@@ -130,7 +130,7 @@ runtime_args_t parse_args(int argc, char** argv) {
 void free_runtime(void) {
   vlua_free();
   api_free();
-  SYSTEM_LOG("All resources released.");
+  SYSTEM_LOG("All resources released!");
 }
 
 /**
@@ -168,8 +168,7 @@ int start_runtime(runtime_args_t args) {
   mode.
 */
 int WinMain(void) {
-  start_runtime(parse_args(__argc, __argv));
-  return 0;
+  return start_runtime(parse_args(argc, argv));
 }
 
 #else
@@ -179,8 +178,7 @@ int WinMain(void) {
   systems built in debug mode.
 */
 int main(int argc, char** argv) {
-  start_runtime(parse_args(argc, argv));
-  return 0;
+  return start_runtime(parse_args(argc, argv));
 }
 
 #endif

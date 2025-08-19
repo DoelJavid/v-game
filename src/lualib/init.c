@@ -46,6 +46,7 @@ int vlua_init(const char* path) {
   }
 
   lua_close(L);
+  L = NULL;
   return 0;
 }
 
