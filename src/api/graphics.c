@@ -8,13 +8,18 @@
 
 #include "graphics.h"
 
-static RenderTexture2D graphics_framebuffer;
+static RenderTexture2D* graphics_framebuffer;
 static size_t graphics_command_index = 0;
 static draw_command_t graphics_commands[MAX_GRAPHICS_COMMANDS] = {0};
 
-RenderTexture2D* graphics_init(void) {
-  graphics_framebuffer = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
-  return &graphics_framebuffer;
+void graphics_init(RenderTexture2D* framebuffer) {
+  assert(
+    framebuffer != NULL &&
+    "`graphics_init()` expected framebuffer! Passed NULL!"
+  );
+
+  *framebuffer = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
+  graphics_framebuffer = framebuffer;
 }
 
 void graphics_push_command(draw_command_t cmd) {
@@ -23,7 +28,9 @@ void graphics_push_command(draw_command_t cmd) {
   graphics_commands[graphics_command_index++] = cmd;
 }
 
-void graphics_clear(void) { graphics_push_command((draw_command_t){0}); }
+void graphics_clear(void) {
+  graphics_push_command((draw_command_t){0});
+}
 
 void graphics_color(int color_id) {
   graphics_push_command((draw_command_t){1, (float)color_id, 0.0f});
@@ -41,15 +48,8 @@ void graphics_draw(void) {
   static float turtle_x, turtle_y = 0.0f;
   static Color current_color;
 
-  // Resize the framebuffer if needed.
-  if (IsWindowResized()) {
-    UnloadRenderTexture(graphics_framebuffer);
-    graphics_framebuffer =
-      LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
-  }
-
   // Begin drawing.
-  BeginTextureMode(graphics_framebuffer);
+  BeginTextureMode(*graphics_framebuffer);
 
   for (int i = 0; i < graphics_command_index; i++) {
     draw_command_t current_command = graphics_commands[i];
@@ -118,9 +118,13 @@ void graphics_draw(void) {
 
   // End drawing and interrupt to draw framebuffer.
   EndTextureMode();
-  runtime_interrupt();
+  system_interrupt();
 }
 
-size_t graphics_count(void) { return graphics_command_index; }
+const size_t graphics_count(void) { return graphics_command_index; }
 
-void graphics_free(void) { UnloadRenderTexture(graphics_framebuffer); }
+void graphics_free(void) {
+  if (graphics_framebuffer)
+    graphics_framebuffer = NULL;
+}
+

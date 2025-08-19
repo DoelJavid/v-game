@@ -104,7 +104,11 @@ void audio_blip(int waveform_id, int semitone, float volume, float duration) {
 }
 
 void audio_free(void) {
-  for (int i = 0; i < sizeof(channels) / sizeof(Sound); i++)
-    UnloadSound(channels[i]);
-  CloseAudioDevice();
+  for (int i = 0; i < sizeof(channels) / sizeof(Sound); i++) {
+    if (IsSoundValid(channels[i]))
+      UnloadSound(channels[i]);
+  }
+
+  if (IsAudioDeviceReady())
+    CloseAudioDevice();
 }

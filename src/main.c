@@ -6,13 +6,22 @@
   https://github.com/DoelJavid/v-game
 */
 
-#include "runtime.h"
+#include "api/intro.h"
+#include "api/init.h"
+#include "lualib/init.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct {
+  char game_path[260];
+  bool fullscreen;
+  bool cut_intro;
+}  runtime_args_t;
+
 /**
-  Returns the number of '-' characters at the start of the string.
+  Returns the number of '-' characters at the start of the string. Can be used
+  to discern between short and long arguments.
 */
 int get_slashes(const char* str) {
   int result = 0;
@@ -42,36 +51,16 @@ void display_help(void) {
 }
 
 /**
-  The main function of the applictation.
+  Parses all arguments passed through `argc` and `argv` within the entry point.
+  Exits the application if the given command-line flags are invalid.
 */
-#ifdef _WIN32
-
-#ifdef BUILD_RELEASE
-int WinMain(void) {
-  // Redefine argc and argv to ensure backwards compatibility with traditional
-  // main.
-  int argc = __argc;
-  char** argv = __argv;
-
-#else
-
-// Use traditional main on windows for debug mode to display command-line.
-int main(int argc, char** argv) {
-
-#endif
-
-#else
-int main(int argc, char** argv) {
-#endif
-
+runtime_args_t parse_args(int argc, char** argv) {
   if (argc < 2) {
-    printf("Nothing to run!\n");
-    return -1;
+    SYSTEM_PANIC_LOG("Nothing to run!");
+    exit(-1);
   }
 
   runtime_args_t runtime_args = {0};
-  char game_path[260] = "";
-
   for (int i = 1; i < argc; i++) {
     const char* current_arg = argv[i];
     int slashes = get_slashes(current_arg);
@@ -80,8 +69,8 @@ int main(int argc, char** argv) {
     case 1: {
       int arg_length = strlen(current_arg);
       if (arg_length > 2) {
-        printf("Invalid flag \"%s\"!\n", current_arg);
-        return 1;
+        SYSTEM_PANIC_LOG("Invalid flag \"%s\"!", current_arg);
+        exit(-1);
       }
 
       switch (current_arg[1]) {
@@ -97,8 +86,8 @@ int main(int argc, char** argv) {
         display_help();
 
       default:
-        printf("Invalid flag \"%s\"!\n", current_arg);
-        return 1;
+        SYSTEM_PANIC_LOG("Invalid flag \"%s\"!", current_arg);
+        exit(-1);
       }
     } break;
 
@@ -111,32 +100,88 @@ int main(int argc, char** argv) {
       } else if (strcmp(current_arg, "--help") == 0) {
         display_help();
       } else {
-        printf("Invalid flag \"%s\"!\n", current_arg);
-        return 1;
+        SYSTEM_PANIC_LOG("Invalid flag \"%s\"!", current_arg);
+        exit(-1);
       }
     } break;
 
     default: // Attempt to parse the file path.
     {
       int path_length = strlen(current_arg);
-      strncpy(game_path, current_arg, path_length);
+      strncpy(runtime_args.game_path, current_arg, path_length);
 
       if (current_arg[path_length - 1] == '\\' ||
           current_arg[path_length - 1] == '/') {
-        strcat(game_path, "init.lua");
+        strcat(runtime_args.game_path, "init.lua");
       } else if (strcmp(&current_arg[path_length - 4], ".lua") != 0) {
-        strcat(game_path, ".lua");
+        strcat(runtime_args.game_path, ".lua");
       }
 
-      runtime_args.starting_game = game_path;
     } break;
     }
   }
 
-  if (!runtime_args.starting_game) {
-    printf("Nothing to run!\n");
-    return -1;
+  return runtime_args;
+}
+
+/**
+  Frees all resources related to the runtime.
+*/
+void free_runtime(void) {
+  vlua_free();
+  api_free();
+  SYSTEM_LOG("All resources released.");
+}
+
+/**
+  Starts the runtime with the given command-line arguments.
+*/
+int start_runtime(runtime_args_t args) {
+  if (atexit(free_runtime)) {
+    SYSTEM_PANIC_LOG("%s", "Failed to register cleanup functions!");
+    return 1;
   }
 
-  return runtime_init(runtime_args);
+  // Initialize game window. //
+  sys_args_t sys_args = {.fullscreen = args.fullscreen};
+  api_init(sys_args);
+
+  if (!args.cut_intro)
+    intro_play();
+
+  // Initialize the Lua runtime.
+  SYSTEM_LOG("Executing game at %s", args.game_path);
+
+  int exit_status = vlua_init(args.game_path);
+  if (exit_status)
+    return exit_status;
+
+  api_free();
+  return 0;
 }
+
+
+#if defined(_WIN32) && defined(BUILD_RELEASE)
+
+/**
+  The entry point of the applictation for windows systems built in release
+  mode.
+*/
+int WinMain(void) {
+  start_runtime(parse_args(__argc, __argv));
+  return 0;
+}
+
+#else
+
+/**
+  The entry point of the application for all unix systems and for windows
+  systems built in debug mode.
+*/
+int main(int argc, char** argv) {
+  start_runtime(parse_args(argc, argv));
+  return 0;
+}
+
+#endif
+

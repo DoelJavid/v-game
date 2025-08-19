@@ -9,7 +9,10 @@
 #ifndef LUALIB_VBASE_H
 #define LUALIB_VBASE_H
 
-#include "../runtime.h"
+#include "../api/system.h"
+#include "audio.h"
+#include "graphics.h"
+#include "input.h"
 #include <lauxlib.h>
 #include <lua.h>
 #include <lualib.h>
@@ -21,3 +24,4 @@
 void luaopen_vbase(lua_State* L);
 
 #endif
+

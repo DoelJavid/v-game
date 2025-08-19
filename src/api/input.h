@@ -48,3 +48,4 @@ bool input_pressed(int button_id, int controller_id);
 bool input_tapped(int button_id, int controller_id);
 
 #endif
+

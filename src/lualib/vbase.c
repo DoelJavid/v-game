@@ -37,9 +37,8 @@ static int luavbase_type(lua_State* L) {
   Sleeps for the given amount of frames.
 */
 static int luavbase_sleep(lua_State* L) {
-  for (int frames = luaL_checkint(L, 1); frames > 0; frames--) {
-    runtime_interrupt();
-  }
+  for (int frames = luaL_checkint(L, 1); frames > 0; frames--)
+    system_interrupt();
   return 0;
 }
 
@@ -57,11 +56,17 @@ void luaopen_vbase(lua_State* L) {
     "loadfile",
     "loadstring",
     "module",
+    "rawequal",
+    "rawget",
+    "rawset",
     "require",
     "setfenv",
     "getmetatable",
     "setmetatable",
-    "type"
+    "type",
+    "print",
+    "error",
+    "select"
   };
   // clang-format on
 
@@ -82,3 +87,4 @@ void luaopen_vbase(lua_State* L) {
     lua_register(L, reg->name, reg->func);
   }
 }
+

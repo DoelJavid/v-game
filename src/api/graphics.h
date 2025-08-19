@@ -9,7 +9,8 @@
 #ifndef API_GRAPHICS_H
 #define API_GRAPHICS_H
 
-#include "../runtime.h"
+#include "system.h"
+#include <assert.h>
 #include <raylib.h>
 
 #define MAX_GRAPHICS_COMMANDS 255
@@ -22,7 +23,7 @@ typedef struct {
 /**
   Initializes the graphics library and returns a framebuffer.
 */
-RenderTexture2D* graphics_init(void);
+void graphics_init(RenderTexture2D* framebuffer);
 
 /**
   Pushes the given command to the draw commands if possible. If the total
@@ -85,3 +86,4 @@ const size_t graphics_count(void);
 void graphics_free(void);
 
 #endif
+
