@@ -4,6 +4,7 @@
 #define LUALIB_SYSTEM_H
 
 #include "../api/system.h"
+#include "vbase.h"
 #include <lua.h>
 #include <lauxlib.h>
 
