@@ -10,6 +10,8 @@
 #define LUALIB_INIT_H
 
 #include "vbase.h"
+#include "vmath.h"
+#include "vstring.h"
 #include "system.h"
 #include "input.h"
 #include "graphics.h"

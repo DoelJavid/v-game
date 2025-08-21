@@ -12,18 +12,19 @@ static lua_State* L;
 
 void vlua_openlibs(lua_State* L) {
   luaopen_vbase(L);
+  luaopen_vmath(L);
+  luaopen_vstring(L);
   luaopen_graphics(L);
   luaopen_audio(L);
   luaopen_input(L);
   luaopen_system(L);
-  luaopen_math(L);
-  luaopen_string(L);
+  // luaopen_string(L);
 
   // Remove string.dump.
-  lua_getglobal(L, "string");
-  lua_pushnil(L);
-  lua_setfield(L, -2, "dump");
-  lua_pop(L, 1);
+  // lua_getglobal(L, "string");
+  // lua_pushnil(L);
+  // lua_setfield(L, -2, "dump");
+  // lua_pop(L, 1);
 }
 
 int vlua_init(const char* path) {
