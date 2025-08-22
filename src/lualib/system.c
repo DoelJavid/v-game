@@ -72,7 +72,7 @@ static int luasystem_exit(lua_State* L) {
 */
 static int luasystem_tick(lua_State* L) {
   lua_pushinteger(L, system_tick());
-  return 0;
+  return 1;
 }
 
 /**
@@ -80,7 +80,7 @@ static int luasystem_tick(lua_State* L) {
 */
 static int luasystem_time(lua_State* L) {
   lua_pushinteger(L, SYSTEM_GET_TIME());
-  return 0;
+  return 1;
 }
 
 void luaopen_system(lua_State* L) {
