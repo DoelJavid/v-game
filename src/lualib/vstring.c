@@ -36,7 +36,7 @@ static int luavstring_byte(lua_State* L) {
 static int luavstring_char(lua_State* L) {
   size_t str_length;
   const char* str = luaL_checklstring(L, 1, &str_length);
-  size_t byte_location = luaL_checkint(L, 2);
+  size_t byte_location = luaL_optint(L, 2, 1);
 
   if (byte_location > str_length) {
     lua_pushnil(L);
@@ -75,11 +75,15 @@ static int luavstring_lower(lua_State* L) {
 /**
   Returns a slice of the given string, starting at the given start index (or
   the start of the string if the start index is `nil`), and ending at the given
-  end index (or at the null terminator if no end index is given). If the start
-  index is negative, then this function will start from the position of the
-  null terminator minus the given start index. If the position of the start
-  index is greater than the given end index, then this function will return
-  `nil`.
+  end index (or at the null terminator if no end index is given).
+
+  If the start index is negative, then this function will start from the
+  position of the null terminator minus the given start index. If the position
+  of the start index is greater than or equal to the given end index, then this
+  function will return an empty string.
+
+  If the given end index is greater than the length of the string, the end
+  index will be truncated down to fit the length of the string.
 */
 static int luavstring_slice(lua_State* L) {
   size_t str_length;
@@ -90,8 +94,11 @@ static int luavstring_slice(lua_State* L) {
   if (start < 0)
     start += str_length;
 
+  if (end > str_length)
+    end = str_length;
+
   size_t slice_length = end - start;
-  if (slice_length < 0) {
+  if (slice_length <= 0) {
     lua_pushstring(L, "");
     return 1;
   }
