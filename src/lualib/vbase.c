@@ -28,7 +28,7 @@ static int luavbase_assert(lua_State* L) {
 static int luavbase_check(lua_State* L) {
   luaL_checkany(L, 1);
   const char* test_type = luaL_checkstring(L, 2);
-  const char* real_type_name = lua_typename(L, 1);
+  const char* real_type_name = lua_typename(L, lua_type(L, 1));
   const int real_type_id = lua_type(L, 1);
 
   // Push the typename of the value to the stack.
@@ -58,6 +58,9 @@ static int luavbase_check(lua_State* L) {
   return luaL_error(L, "Expected %s, but got %s!", real_type_name, test_type);
 }
 
+/**
+  The iterator function used as a return value of `ipairs()`.
+*/
 static int luavbase_ipairs_next(lua_State* L) {
   int idx = luaL_checkint(L, 2) + 1;
 
@@ -79,6 +82,12 @@ static int luavbase_ipairs_next(lua_State* L) {
   return luaL_typerror(L, 1, "table or string");
 }
 
+/**
+  Takes an iterable and returns three values: an iterator function, the table
+  itself, and 0. If used in a `for..in` loop, the returned iterator function
+  will iterate through the table starting at index 1 up to the first occurance
+  of `nil`.
+*/
 static int luavbase_ipairs(lua_State* L) {
   int type = lua_type(L, 1);
   if (type == LUA_TTABLE || type == LUA_TSTRING) {
@@ -90,6 +99,12 @@ static int luavbase_ipairs(lua_State* L) {
   return luaL_typerror(L, 1, "table or string");
 }
 
+/**
+  Returns the next key-value pair within the given iterable. This function can
+  be used to iterate through a table without using `pairs()` or `ipairs()`
+  directly, and can be used to write custom iterators. Just keep in mind that
+  `next()` will traverse tables in an unpredictable order!
+*/
 static int luavbase_next(lua_State* L) {
   if (lua_istable(L, 1)) {
     lua_settop(L, 2);
@@ -113,6 +128,12 @@ static int luavbase_next(lua_State* L) {
   return luaL_typerror(L, 1, "table or string");
 }
 
+/**
+  Takes an iterable value and returns three values: the `next()` function, the
+  given iterable, and nil. If used in a `for..in` loop, The returned iterator
+  function will iterate through all key-value pairs in a table in an
+  unpredictable order.
+*/
 static int luavbase_pairs(lua_State* L) {
   int type = lua_type(L, 1);
   if (type == LUA_TTABLE || type == LUA_TSTRING) {
@@ -423,9 +444,9 @@ int luavbase_tostring(lua_State* L) {
   Attempts to convert the given Lua value to a number.
 
   If the given value is a table, it will first attempt to return the result of
-  the table method `__tonumber`. If the `__tonumber` field doesn't exist within
-  the table, this function will return 0. If the `__tonumber` field within the
-  table is not a function, this function will throw an error.
+  the table method `__tonumber`. If the `__tonumber` method doesn't exist
+  within the table, this function will return 0. If the `__tonumber` field
+  within the table is not a function, this function will throw an error.
 
   If the given value is a function, the given function will be called with no
   arguments and the return value will be returned as a number.
@@ -467,7 +488,7 @@ static int luavbase_tonumber(lua_State* L) {
     break;
 
   default:
-    lua_pushnil(L);
+    lua_pushinteger(L, 0);
     break;
   }
 
