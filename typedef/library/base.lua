@@ -1,7 +1,7 @@
 ---@meta
 
 --[[
-  input.lua
+  base.lua
 
   Made by DoelJavid for V-GAME.
 
@@ -18,24 +18,20 @@ containing the given error message.
 ]]
 function assert(condition, message) end
 
----@param message any
----@param level? integer
+---@param value any
+---@param expect string
 --[[
-Terminates the last protected function called and returns the given message. If
-this function is used outside of pcall, then this function will terminate the
-application. This function never returns.
-
-Optionally, an error level can be given, which error uses to add information
-towards the beginning of the error message. At level 1 (the default), the
-error's position is where the `error()` function was just called. Level 2
-points the error to the function containing the call to `error()`, and so on.
-Passing a level of 0 avoids adding position information to the error.
+Tests whether or not the given value matches the given type string, and will
+throw a type error if they don't match. If the given value is a table, this
+function will also test if the `__type` field within the table matches the
+given type string, otherwise, it will test it's raw type. This function is
+useful for enforcing strict type checking.
 ]]
-function error(message, level) end
+function check(value, expect) end
 
----@generic T: table, V
+---@generic T: table | string, V
 ---@param iterable T
----@return fun(iterable: V[], index?: number): integer, V
+---@return fun(iterable: V[] | string, index?: number): integer, V
 ---@return T
 ---@return integer
 --[[
@@ -47,10 +43,10 @@ iterate through the table starting at index 1 up to the first occurance of
 function ipairs(iterable) end
 
 ---@generic K, V
----@param iterable table<K, V>
+---@param iterable table<K, V> | string
 ---@param index? K
 ---@return K?
----@return V?
+---@return (V | integer)?
 --[[
 Returns the next key-value pair within the given iterable. This function can be
 used to iterate through a table without using `pairs()` or `ipairs()` directly,
@@ -59,11 +55,11 @@ traverse tables in an unpredictable order!
 ]]
 function next(iterable, index) end
 
----@generic T: table, K, V
+---@generic T: table | string, K, V
 ---@param iterable T
----@return fun(iterable: table<K, V>, index?: K): K, V
+---@return fun(iterable: table<K, V> | string, index?: K): K, (V | integer)
 ---@return K
----@return V
+---@return (V | integer)
 --[[
 Takes an iterable value and returns three values: the `next()` function, the
 given iterable, and nil. If used in a `for..in` loop, The returned iterator
@@ -87,13 +83,23 @@ the given function as parameters.
 ]]
 function pcall(func, ...) end
 
----@param ... any
+---@param value any
+---@param expect string
 --[[
-Receives any number of arguments and prints their values to stdout, converting
-every value to a string if possible. This function is commonly used for
-debugging reasons.
+Tests whether or not the given value matches the given type string, and will
+throw a type error if they don't match. If the given value is a table, this
+function will ignore the `__type` field within it.
 ]]
-function print(...) end
+function rawcheck(value, expect) end
+
+---@param value any
+---@return string
+--[[
+Returns the type of a given value unless the given value is a table. If the
+given value is a table, it will return the string "table" regardless of whether
+or not it contains a `__type` field.
+]]
+function rawtype(value) end
 
 ---@param frames? integer
 --[[
@@ -115,4 +121,37 @@ This function will error if the `__type` field of the given table isn't a
 string!
 ]]
 function type(value) end
+
+---@param value any
+---@return number
+--[[
+Attempts to convert the given value to a number.
+
+If the given value is a table, it will first attempt to return the result of
+the table method `__tonumber`. If the `__tonumber` method doesn't exist within
+the table, this function will return 0. If the `__tonumber` field within the
+table is not a function or nil, this function will throw an error.
+
+If the given value is a function, the given function will be called with no
+arguments and the return value will be returned as a number, or 0 if the
+conversion fails.
+]]
+function tonumber(value) end
+
+---@param value any
+---@return string
+--[[
+Attempts to convert the given value to a string.
+
+If the given value is a table, it will first attempt to return the result of
+the table method `__tostring`. If the `__tostring` method doesn't exist within
+the table, this function will walk throught the table and return a multi-line
+string representing the table along with it's contents. If the `__tostring`
+field within the table is not a function or nil, this function will throw an
+error.
+
+If the given value is a function, the given function will be called with no
+arguments and the return value will be returned as a string.
+]]
+function tostring(value) end
 

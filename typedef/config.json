@@ -13,6 +13,7 @@
       "ffi": "disable",
       "io": "disable",
       "jit": "disable",
+      "math": "disable",
       "os": "disable",
       "package": "disable",
       "string": "disable",

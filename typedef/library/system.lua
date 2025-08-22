@@ -18,7 +18,8 @@ system = {}
 ---@param ... any
 --[[
 Prints the data given to the function to the console. The printed message will
-be formatted as an error message.
+be formatted as an error message. This function will not exit the program when
+called.
 ]]
 function system.error(...) end
 
@@ -30,9 +31,7 @@ function system.exit(code) end
 
 ---@param ... any
 --[[
-Prints the data given to the function to the console. The printed message will
-be formatted as an error message. This function will not exit the program when
-called.
+Prints the data given to the function to the console.
 ]]
 function system.log(...) end
 

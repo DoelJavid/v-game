@@ -1,127 +1,80 @@
 ---@meta string
 
 --[[
-  input.lua
+  string.lua
 
-  Copied from Lua Language Server.
+  Made by DoelJavid for V-GAME.
 
-  https://github.com/LuaLS/lua-language-server/blob/master/meta/template/string.lua
+  https://github.com/DoelJavid/v-game
 ]]
 
----#DES 'string'
----@class stringlib
+---@class string
+--[[
+V-GAME's string library. This library contains functions for indexing and
+manipulating strings. However, Lua's pattern matching functions are noticebly
+missing, so all pattern matching operations need to be done manually by the
+user.
+]]
 string = {}
 
----#DES 'string.byte'
----@param s  string|number
----@param i? integer
----@param j? integer
----@return integer ...
----@nodiscard
-function string.byte(s, i, j) end
-
----#DES 'string.char'
----@param byte integer
----@param ... integer
----@return string
----@nodiscard
-function string.char(byte, ...) end
-
----#DES 'string.find'
----@param s       string|number
----@param pattern string|number
----@param init?   integer
----@param plain?  boolean
----@return integer|nil start
----@return integer|nil end
----@return any|nil ... captured
----@nodiscard
-function string.find(s, pattern, init, plain) end
-
----#DES 'string.format'
----@param s string|number
----@param ... any
----@return string
----@nodiscard
-function string.format(s, ...) end
-
----#DES 'string.gmatch'
----#if VERSION <= 5.3 then
----@param s       string|number
----@param pattern string|number
----@return fun():string, ...
----@nodiscard
-function string.gmatch(s, pattern) end
----#else
----@param s       string|number
----@param pattern string|number
----@param init?   integer
----@return fun():string, ...
-function string.gmatch(s, pattern, init) end
----#end
-
----#DES 'string.gsub'
----@param s       string|number
----@param pattern string|number
----@param repl    string|number|table|function
----@param n?      integer
----@return string
----@return integer count
-function string.gsub(s, pattern, repl, n) end
-
----#DES 'string.len'
----@param s string|number
+---@param str string
+---@param index? integer
 ---@return integer
----@nodiscard
-function string.len(s) end
+--[[
+Returns the character of the given string at the given index as an integer
+representing an ASCII character code. If the index is out of range, this
+function will return `nil`. If no index is given, the first character of the
+string will be returned as an integer.
+]]
+function string.byte(str, index) end
 
----#DES 'string.lower'
----@param s string|number
+---@param str string
+---@param index? integer
 ---@return string
----@nodiscard
-function string.lower(s) end
+--[[
+Returns the character of the given string at the given index as a single
+character string. If the index is out of range, or if no index is given, this
+function will return `nil`.
+]]
+function string.char(str, index) end
 
----#DES 'string.match'
----@param s       string|number
----@param pattern string|number
----@param init?   integer
----@return any ...
----@nodiscard
-function string.match(s, pattern, init) end
+---@param str string
+---@return integer
+--[[
+Returns the length of the given string going up to its null terminator.
+]]
+function string.length(str) end
 
----@param s    string|number
----@param n    integer
----@param sep? string|number
+---@param str string
 ---@return string
----@nodiscard
-function string.rep(s, n, sep) end
+--[[
+Returns a copy of the given string with all characters in lowercase.
+]]
+function string.lower(str) end
 
----#DES 'string.reverse'
----@param s string|number
+---@param str string
+---@param start? integer
+---@param finish? integer
 ---@return string
----@nodiscard
-function string.reverse(s) end
+--[[
+Returns a slice of the given string, starting at the given start index (or the
+start of the string if the start index is `nil`), and ending at the given end
+index (or at the null terminator if no end index is given).
 
----#DES 'string.sub'
----@param s  string|number
----@param i  integer
----@param j? integer
+If the start index is negative, then this function will start from the position
+of the null terminator minus the given start index. If the position of the
+start index is greater than or equal to the given end index, then this function
+will return an empty string.
+
+If the given end index is greater than the length of the string, the end index
+will be truncated down to fit the length of the string.
+]]
+function string.slice(str, start, finish) end
+
+---@param str string
 ---@return string
----@nodiscard
-function string.sub(s, i, j) end
-
----@version >5.3
----#DES 'string.unpack'
----@param fmt  string
----@param s    string
----@param pos? integer
----@return any ...
----@nodiscard
-function string.unpack(fmt, s, pos) end
-
----#DES 'string.upper'
----@param s string|number
----@return string
----@nodiscard
-function string.upper(s) end
+--[[
+Returns a copy of the given string with all characters in uppercase.
+]]
+function string.upper(str) end
 
