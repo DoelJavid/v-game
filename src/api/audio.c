@@ -61,20 +61,21 @@ generate_waveform(short* buffer, int samples, waveform_params_t params) {
 */
 static Sound generate_sound(waveform_params_t params) {
   int total_samples = params.duration * SAMPLE_RATE;
-  short buffer[total_samples];
+  short* buffer = malloc(total_samples * sizeof(short));
   generate_waveform(buffer, total_samples, params);
 
   // clang-format off
-  Wave sound_wave = (Wave){
+  Sound sound = LoadSoundFromWave((Wave){
     .frameCount = total_samples,
     .sampleRate = SAMPLE_RATE,
     .sampleSize = 16,
     .channels = 1,
     .data = buffer
-  };
+  });
   // clang-format on
 
-  Sound sound = LoadSoundFromWave(sound_wave);
+
+  free(buffer);
   return sound;
 }
 

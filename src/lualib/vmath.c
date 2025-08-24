@@ -233,7 +233,7 @@ void luaopen_vmath(lua_State* L) {
   };
 
   luaL_register(L, "math", luavmath_lib);
-  lua_pushnumber(L, M_PI);
+  lua_pushnumber(L, LUALIB_MATH_PI);
   lua_setfield(L, -2, "PI");
 
   lua_pushnumber(L, HUGE_VALF);

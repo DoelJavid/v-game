@@ -9,6 +9,9 @@
 #ifndef LUALIB_VMATH_H
 #define LUALIB_VMATH_H
 
+// Defined since Windows doesn't define M_PI.
+#define LUALIB_MATH_PI 3.14159265358979323846
+
 #include <lua.h>
 #include <lauxlib.h>
 #include <math.h>

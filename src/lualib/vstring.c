@@ -62,13 +62,14 @@ static int luavstring_length(lua_State* L) {
 */
 static int luavstring_lower(lua_State* L) {
   size_t str_length;
+  luaL_Buffer result_buffer;
   const char* str = luaL_checklstring(L, 1, &str_length);
-  char new_str[str_length];
 
+  luaL_buffinit(L, &result_buffer);
   for (int i = 0; i < str_length; i++)
-    new_str[i] = tolower(str[i]);
+    luaL_addchar(&result_buffer, tolower(str[i]));
 
-  lua_pushlstring(L, new_str, str_length);
+  luaL_pushresult(&result_buffer);
   return 1;
 }
 
@@ -112,13 +113,14 @@ static int luavstring_slice(lua_State* L) {
 */
 static int luavstring_upper(lua_State* L) {
   size_t str_length;
+  luaL_Buffer result_buffer;
   const char* str = luaL_checklstring(L, 1, &str_length);
-  char new_str[str_length];
 
+  luaL_buffinit(L, &result_buffer);
   for (int i = 0; i < str_length; i++)
-    new_str[i] = toupper(str[i]);
+    luaL_addchar(&result_buffer, toupper(str[i]));
 
-  lua_pushlstring(L, new_str, str_length);
+  luaL_pushresult(&result_buffer);
   return 1;
 }
 
