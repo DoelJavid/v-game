@@ -289,7 +289,7 @@ function Ship()
     end
 
     if input.tapped("A") then
-      fireBullet(self.Position, pointFromRotation(self.Rotation + math.pi / 2):Scale(0.02))
+      fireBullet(self.Position, pointFromRotation(self.Rotation + math.PI / 2):Scale(0.02))
       audio.blip(1, {Semitone = 23, Duration = 0.05, Volume = 0.25})
     end
 
